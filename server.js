@@ -4,48 +4,49 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// CORS設定
 app.use((req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     next();
 });
 
-// 静的ファイルの提供
 app.use(express.static('.'));
 
-// 自前スクレイピング検索エンドポイント
 app.get('/api/search', async (req, res) => {
     const query = req.query.q;
     if (!query) return res.json({ result: [] });
 
     try {
         const response = await axios.get(`https://momon-ga.com/?s=${encodeURIComponent(query)}`, {
-            headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36' }
+            headers: { 
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36' 
+            }
         });
         const html = response.data;
         const results = [];
         
-        // 実際のサイト構造（articleタグやthumbnailクラス）に合わせた抽出
-        const itemRegex = /<article[\s\S]*?href="https:\/\/momon-ga\.com\/fanzine\/(.*?)\/"[\s\S]*?src="(.*?)"[\s\S]*?entry-title">(.*?)<\/h2>/g;
+        // 修正ポイント: 改行や空白に左右されないよう [\s\S]*? を多用し、タグの構成を柔軟に
+        // momon-gaの検索結果は <article> 内に <a> や <img> が含まれる構造
+        const itemRegex = /<article[\s\S]*?href="https:\/\/momon-ga\.com\/fanzine\/(.*?)\/"[\s\S]*?src="([^"]+)"[\s\S]*?entry-title"><a[^>]*>(.*?)<\/a>/g;
         
         let match;
         while ((match = itemRegex.exec(html)) !== null) {
             results.push({
-                id: match[1].replace(/\/$/, ""), // 末尾のスラッシュを削除
-                image: match[2].startsWith('http') ? match[2] : `https://momon-ga.com${match[2]}`,
-                title: match[3].replace(/<[^>]*>?/gm, '').trim(), // タグを除去してクリーンアップ
+                id: match[1].replace(/\/$/, ""), 
+                image: match[2],
+                title: match[3].trim(),
                 rule: "" 
             });
         }
+
+        console.log(`Query: ${query}, Found: ${results.length} items`); // デバッグ用
         res.json({ result: results });
     } catch (error) {
-        console.error(error);
+        console.error("Search API Error:", error.message);
         res.status(500).json({ error: "Search failed" });
     }
 });
 
-// 詳細ページスクレイピングエンドポイント
 app.get('/api/proxy-details', async (req, res) => {
     const targetUrl = req.query.url;
     if (!targetUrl) return res.status(400).send("URL is required");
@@ -57,7 +58,6 @@ app.get('/api/proxy-details', async (req, res) => {
         const htmlString = response.data;
         const imgUrls = [];
         
-        // ギャラリー画像の抽出正規表現
         const galleryRegex = /src="([^"]*galleries[^"]*)"/g;
         let match;
         while ((match = galleryRegex.exec(htmlString)) !== null) {
@@ -70,16 +70,12 @@ app.get('/api/proxy-details', async (req, res) => {
         const titleMatch = htmlString.match(/<h1[^>]*>(.*?)<\/h1>/);
         const title = titleMatch ? titleMatch[1].replace(/<[^>]*>?/gm, '').trim() : "No Title";
 
-        res.json({
-            title: title,
-            images: uniqueUrls
-        });
+        res.json({ title, images: uniqueUrls });
     } catch (error) {
         res.status(500).json({ error: "Failed to fetch details" });
     }
 });
 
-// 画像プロキシエンドポイント (Refererを偽装して取得)
 app.get('/api/image-proxy', async (req, res) => {
     const imageUrl = req.query.url;
     if (!imageUrl) return res.status(400).send("Image URL is required");
