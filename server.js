@@ -11,36 +11,36 @@ app.use((req, res, next) => {
     next();
 });
 
-// 静的ファイルの提供 (Renderデプロイ用)
+// 静的ファイルの提供
 app.use(express.static('.'));
 
-// 自前スクレイピング検索エンドポイント (s=クエリに対応)
+// 自前スクレイピング検索エンドポイント
 app.get('/api/search', async (req, res) => {
     const query = req.query.q;
     if (!query) return res.json({ result: [] });
 
     try {
-        // ご提示の検索形式 https://momon-ga.com/?s=キーワード に対応
         const response = await axios.get(`https://momon-ga.com/?s=${encodeURIComponent(query)}`, {
-            headers: { 'User-Agent': 'Mozilla/5.0' }
+            headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36' }
         });
         const html = response.data;
         const results = [];
         
-        // 検索結果のアイテム（aタグのhref、imgのsrc、タイトル等）を抽出する正規表現
-        const itemRegex = /<div class="fanzine-item">[\s\S]*?href="\/fanzine\/(.*?)"[\s\S]*?src="(.*?)"[\s\S]*?class="title">(.*?)<\/div>/g;
+        // 実際のサイト構造（articleタグやthumbnailクラス）に合わせた抽出
+        const itemRegex = /<article[\s\S]*?href="https:\/\/momon-ga\.com\/fanzine\/(.*?)\/"[\s\S]*?src="(.*?)"[\s\S]*?entry-title">(.*?)<\/h2>/g;
         
         let match;
         while ((match = itemRegex.exec(html)) !== null) {
             results.push({
-                id: match[1],
+                id: match[1].replace(/\/$/, ""), // 末尾のスラッシュを削除
                 image: match[2].startsWith('http') ? match[2] : `https://momon-ga.com${match[2]}`,
-                title: match[3].trim(),
+                title: match[3].replace(/<[^>]*>?/gm, '').trim(), // タグを除去してクリーンアップ
                 rule: "" 
             });
         }
         res.json({ result: results });
     } catch (error) {
+        console.error(error);
         res.status(500).json({ error: "Search failed" });
     }
 });
@@ -56,18 +56,19 @@ app.get('/api/proxy-details', async (req, res) => {
         });
         const htmlString = response.data;
         const imgUrls = [];
+        
+        // ギャラリー画像の抽出正規表現
         const galleryRegex = /src="([^"]*galleries[^"]*)"/g;
         let match;
         while ((match = galleryRegex.exec(htmlString)) !== null) {
             let src = match[1];
             if (src.startsWith('/')) src = 'https://momon-ga.com' + src;
-            // 画像はプロキシ経由のURLとして返却
             imgUrls.push(`/api/image-proxy?url=${encodeURIComponent(src)}`);
         }
 
         const uniqueUrls = [...new Set(imgUrls)];
-        const titleMatch = htmlString.match(/<h1>(.*?)<\/h1>/);
-        const title = titleMatch ? titleMatch[1] : "No Title";
+        const titleMatch = htmlString.match(/<h1[^>]*>(.*?)<\/h1>/);
+        const title = titleMatch ? titleMatch[1].replace(/<[^>]*>?/gm, '').trim() : "No Title";
 
         res.json({
             title: title,
