@@ -3,46 +3,205 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Momon-ga Combined Viewer</title>
+    <title>Sennin - Digital Library</title>
     <style>
-        /* 検索画面のスタイル */
-        body { font-family: 'Helvetica Neue', Arial, sans-serif; background-color: #0f0f0f; color: #e0e0e0; margin: 0; padding: 20px; }
-        .container { max-width: 1200px; margin: 0 auto; }
-        h1 { text-align: center; font-weight: 300; letter-spacing: 2px; color: #ffffff; margin-bottom: 30px; }
-        
-        .search-box { display: flex; gap: 10px; margin-bottom: 30px; background: #1a1a1a; padding: 15px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
-        input { flex: 1; padding: 12px 15px; border: 1px solid #333; border-radius: 8px; background: #252525; color: #fff; outline: none; }
-        input:focus { border-color: #ff4757; }
-        button { padding: 10px 25px; background: #ff4757; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.3s; }
-        button:hover { background: #ff6b81; transform: translateY(-1px); }
-        
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 25px; }
-        .card { background: #1a1a1a; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.3); transition: all 0.3s ease; cursor: pointer; border: 1px solid #222; }
-        .card:hover { transform: translateY(-8px); border-color: #ff4757; box-shadow: 0 8px 20px rgba(255,71,87,0.2); }
-        .card img { width: 100%; height: 280px; object-fit: cover; border-bottom: 1px solid #222; }
-        .card-info { padding: 15px; font-size: 0.9em; }
-        .card-title { font-weight: 600; height: 2.8em; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; margin-bottom: 8px; color: #fff; line-height: 1.4; }
-        .status { text-align: center; margin: 40px; color: #888; font-size: 1.1em; }
+        /* 全体設定: eBookプラットフォームを意識したライトUI */
+        :root {
+            --bg-body: #f8f9fa;
+            --bg-card: #ffffff;
+            --primary: #2c3e50;
+            --accent-blue: #3498db;
+            --text-main: #2d3436;
+            --text-sub: #636e72;
+            --border: #e1e8ed;
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
 
-        /* ビューア用の追加スタイル */
+        body { 
+            font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif; 
+            background-color: var(--bg-body); 
+            color: var(--text-main); 
+            margin: 0; 
+            padding: 0;
+            line-height: 1.5;
+        }
+
+        .container { 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            padding: 30px 20px;
+        }
+
+        /* Sennin ロゴスタイル */
+        .brand-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .brand-header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: var(--primary);
+            margin: 0;
+        }
+
+        /* 検索ボックス: シンプルで機能的なデザイン */
+        .search-box { 
+            display: flex; 
+            gap: 0; 
+            margin-bottom: 40px; 
+            background: var(--bg-card); 
+            padding: 4px; 
+            border-radius: 8px; 
+            box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+            border: 1px solid var(--border);
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        input { 
+            flex: 1; 
+            padding: 14px 20px; 
+            border: none; 
+            background: transparent; 
+            color: var(--text-main); 
+            outline: none; 
+            font-size: 1rem;
+        }
+
+        button { 
+            padding: 0 30px; 
+            background: var(--accent-blue); 
+            color: white; 
+            border: none; 
+            border-radius: 6px; 
+            cursor: pointer; 
+            font-weight: 600; 
+            transition: var(--transition);
+        }
+
+        button:hover { 
+            background: #2980b9; 
+            box-shadow: 0 4px 8px rgba(52,152,219,0.3);
+        }
+        
+        /* グリッド: 書店の棚のような整理されたレイアウト */
+        .grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); 
+            gap: 25px; 
+        }
+
+        .card { 
+            background: var(--bg-card); 
+            border-radius: 4px; 
+            overflow: hidden; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02); 
+            transition: var(--transition); 
+            cursor: pointer; 
+            border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card:hover { 
+            transform: translateY(-5px); 
+            box-shadow: 0 12px 20px rgba(0,0,0,0.08);
+            border-color: var(--accent-blue);
+        }
+
+        .card img { 
+            width: 100%; 
+            height: 280px; 
+            object-fit: cover; 
+            border-bottom: 1px solid var(--border);
+        }
+
+        .card-info { 
+            padding: 12px; 
+            background: #fff;
+            flex-grow: 1;
+        }
+
+        .card-title { 
+            font-weight: 600; 
+            font-size: 0.9rem;
+            height: 2.8em; 
+            overflow: hidden; 
+            display: -webkit-box; 
+            -webkit-line-clamp: 2; 
+            -webkit-box-orient: vertical; 
+            margin-bottom: 8px; 
+            color: var(--text-main); 
+            line-height: 1.4;
+        }
+
+        .card-id {
+            color: var(--text-sub);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+        }
+
+        .status { text-align: center; margin: 40px; color: var(--text-sub); font-size: 0.95em; }
+
+        /* ビューア: リーダーのような没入感のあるライトモード */
         #viewerOverlay { 
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(5,5,5,0.98); z-index: 1000; overflow-y: auto; color: white; padding-top: 60px;
+            background: #ffffff; z-index: 1000; overflow-y: auto; color: var(--text-main);
         }
-        .viewer-content { max-width: 1000px; margin: 0 auto; text-align: center; padding: 0 20px 50px; }
-        .close-btn { position: fixed; top: 20px; right: 30px; font-size: 40px; cursor: pointer; z-index: 1001; color: #ff4757; transition: 0.2s; }
-        .close-btn:hover { color: #fff; }
-        .viewer-image-list img { max-width: 100%; margin-bottom: 20px; border-radius: 4px; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
-        #viewerTitle { font-weight: 300; border-bottom: 1px solid #333; margin-bottom: 30px; padding-bottom: 15px; color: #fff; }
+
+        .viewer-header {
+            position: sticky;
+            top: 0;
+            background: rgba(255,255,255,0.95);
+            padding: 12px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(8px);
+            z-index: 1002;
+        }
+
+        .viewer-content { max-width: 850px; margin: 0 auto; text-align: center; padding: 20px; }
+        
+        .close-btn { font-size: 28px; cursor: pointer; color: var(--text-sub); line-height: 1; }
+        .close-btn:hover { color: var(--text-main); }
+
+        .dl-btn-top {
+            background: #f1f3f5;
+            color: var(--primary);
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-weight: 600;
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: 0.2s;
+            border: 1px solid var(--border);
+        }
+        .dl-btn-top:hover { background: var(--accent-blue); color: #fff; border-color: var(--accent-blue); }
+
+        .viewer-image-list img { 
+            max-width: 100%; 
+            margin-bottom: 15px; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border: 1px solid var(--border);
+        }
+
+        #viewerTitle { font-weight: 700; font-size: 1.1rem; color: var(--primary); margin: 0; flex: 1; text-align: left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 20px; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>Momon-ga 検索ボード</h1>
+    <div class="brand-header">
+        <h1>Sennin</h1>
+    </div>
     
     <div class="search-box">
-        <input type="text" id="searchInput" placeholder="キーワードを入力 (例: A, タイツ...)" value="にゃ">
+        <input type="text" id="searchInput" placeholder="タイトル、キーワードで検索" value="にゃ">
         <button onclick="search()">検索</button>
     </div>
 
@@ -51,10 +210,15 @@
 </div>
 
 <div id="viewerOverlay">
-    <span class="close-btn" onclick="closeViewer()">&times;</span>
-    <div class="viewer-content">
+    <div class="viewer-header">
         <h2 id="viewerTitle"></h2>
-        <div id="viewerStatus" class="status" style="color: #aaa;"></div>
+        <div style="display: flex; align-items: center; gap: 15px;">
+            <a href="javascript:void(0)" class="dl-btn-top" onclick="downloadAll()">一括保存</a>
+            <span class="close-btn" onclick="closeViewer()">✕</span>
+        </div>
+    </div>
+    <div class="viewer-content">
+        <div id="viewerStatus" class="status"></div>
         <div id="viewerImageList" class="viewer-image-list"></div>
     </div>
 </div>
@@ -62,6 +226,7 @@
 <script>
     const MY_API_SEARCH = '/api/search';
     const MY_API_DETAILS = '/api/proxy-details';
+    let currentImages = [];
 
     // 検索機能
     async function search() {
@@ -72,7 +237,7 @@
         if (!query) return;
 
         grid.innerHTML = '';
-        status.innerText = '読み込み中...';
+        status.innerText = 'カタログを読み込み中...';
 
         try {
             const response = await fetch(`${MY_API_SEARCH}?q=${encodeURIComponent(query)}`);
@@ -88,18 +253,18 @@
                         <img src="${item.image}" alt="${item.title}" loading="lazy">
                         <div class="card-info">
                             <div class="card-title">${item.title}</div>
-                            <small style="color:#555">ID: ${item.id}</small>
+                            <div class="card-id">ID: ${item.id}</div>
                         </div>
                     `;
                     card.onclick = () => openViewer(item.id, item.rule);
                     grid.appendChild(card);
                 });
             } else {
-                status.innerText = '結果が見つかりませんでした。';
+                status.innerText = '該当する作品が見つかりませんでした。';
             }
         } catch (error) {
             console.error(error);
-            status.innerText = 'エラーが発生しました。';
+            status.innerText = '通信エラーが発生しました。';
         }
     }
 
@@ -114,7 +279,8 @@
         document.body.style.overflow = 'hidden';
         viewerImageList.innerHTML = '';
         viewerTitle.innerText = '読み込み中...';
-        viewerStatus.innerText = "データを取得しています。少々お待ちください...";
+        viewerStatus.innerText = "コンテンツを最適化しています...";
+        currentImages = [];
 
         const targetUrl = `https://momon-ga.com/fanzine/${id}`;
         const finalUrl = `${MY_API_DETAILS}?url=${encodeURIComponent(targetUrl)}`;
@@ -126,19 +292,39 @@
             viewerTitle.innerText = data.title;
             
             if (data.images && data.images.length > 0) {
+                currentImages = data.images;
                 data.images.forEach(proxyUrl => {
                     const newImg = document.createElement('img');
                     newImg.src = proxyUrl;
                     viewerImageList.appendChild(newImg);
                 });
-                viewerStatus.innerText = `完了: ${data.images.length} 枚の画像を表示中`;
+                viewerStatus.innerText = `${data.images.length} ページを表示中`;
             } else {
-                viewerStatus.innerText = "画像が見つかりませんでした。";
+                viewerStatus.innerText = "画像データが見つかりませんでした。";
             }
 
         } catch (error) {
             console.error(error);
-            viewerStatus.innerText = "エラー: データの取得に失敗しました。";
+            viewerStatus.innerText = "データの取得に失敗しました。";
+        }
+    }
+
+    // ダウンロード機能
+    function downloadAll() {
+        if (currentImages.length === 0) return;
+        
+        if (confirm(`${currentImages.length}枚の画像を一括でダウンロード（新しいタブで開く）しますか？`)) {
+            currentImages.forEach((url, index) => {
+                setTimeout(() => {
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = `sennin-${index + 1}.jpg`;
+                    link.target = '_blank';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                }, index * 200);
+            });
         }
     }
 
