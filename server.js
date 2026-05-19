@@ -79,6 +79,9 @@ app.get('/api/image-proxy', async (req, res) => {
         });
         const contentType = response.headers['content-type'];
         const base64 = Buffer.from(response.data, 'binary').toString('base64');
+        
+        // フロントエンドの res.text() で正しく受け取れるよう、Content-Typeをテキスト(明示的な文字列)に設定
+        res.setHeader('Content-Type', 'text/plain');
         res.send(`data:${contentType};base64,${base64}`);
     } catch (e) { res.status(500).send("Image proxy error"); }
 });
