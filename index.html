@@ -17,18 +17,18 @@
             --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
-        body { 
-            font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif; 
-            background-color: var(--bg-body); 
-            color: var(--text-main); 
-            margin: 0; 
+        body {
+            font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            margin: 0;
             padding: 0;
             line-height: 1.5;
         }
 
-        .container { 
-            max-width: 1200px; 
-            margin: 0 auto; 
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
             padding: 30px 20px;
         }
 
@@ -37,7 +37,7 @@
             text-align: center;
             margin-bottom: 40px;
         }
-        
+
         .brand-header h1 {
             font-size: 2rem;
             font-weight: 700;
@@ -47,13 +47,13 @@
         }
 
         /* 検索ボックス: シンプルで機能的なデザイン */
-        .search-box { 
-            display: flex; 
-            gap: 0; 
-            margin-bottom: 40px; 
-            background: var(--bg-card); 
-            padding: 4px; 
-            border-radius: 8px; 
+        .search-box {
+            display: flex;
+            gap: 0;
+            margin-bottom: 40px;
+            background: var(--bg-card);
+            padding: 4px;
+            border-radius: 8px;
             box-shadow: 0 2px 12px rgba(0,0,0,0.05);
             border: 1px solid var(--border);
             max-width: 600px;
@@ -61,80 +61,80 @@
             margin-right: auto;
         }
 
-        input { 
-            flex: 1; 
-            padding: 14px 20px; 
-            border: none; 
-            background: transparent; 
-            color: var(--text-main); 
-            outline: none; 
+        input {
+            flex: 1;
+            padding: 14px 20px;
+            border: none;
+            background: transparent;
+            color: var(--text-main);
+            outline: none;
             font-size: 1rem;
         }
 
-        button { 
-            padding: 0 30px; 
-            background: var(--accent-blue); 
-            color: white; 
-            border: none; 
-            border-radius: 6px; 
-            cursor: pointer; 
-            font-weight: 600; 
+        button {
+            padding: 0 30px;
+            background: var(--accent-blue);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
             transition: var(--transition);
         }
 
-        button:hover { 
-            background: #2980b9; 
+        button:hover {
+            background: #2980b9;
             box-shadow: 0 4px 8px rgba(52,152,219,0.3);
         }
-        
+
         /* グリッド: 書店の棚のような整理されたレイアウト */
-        .grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); 
-            gap: 25px; 
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 25px;
         }
 
-        .card { 
-            background: var(--bg-card); 
-            border-radius: 4px; 
-            overflow: hidden; 
-            box-shadow: 0 4px 6px rgba(0,0,0,0.02); 
-            transition: var(--transition); 
-            cursor: pointer; 
+        .card {
+            background: var(--bg-card);
+            border-radius: 4px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+            transition: var(--transition);
+            cursor: pointer;
             border: 1px solid var(--border);
             display: flex;
             flex-direction: column;
         }
 
-        .card:hover { 
-            transform: translateY(-5px); 
+        .card:hover {
+            transform: translateY(-5px);
             box-shadow: 0 12px 20px rgba(0,0,0,0.08);
             border-color: var(--accent-blue);
         }
 
-        .card img { 
-            width: 100%; 
-            height: 280px; 
-            object-fit: cover; 
+        .card img {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
             border-bottom: 1px solid var(--border);
         }
 
-        .card-info { 
-            padding: 12px; 
+        .card-info {
+            padding: 12px;
             background: #fff;
             flex-grow: 1;
         }
 
-        .card-title { 
-            font-weight: 600; 
+        .card-title {
+            font-weight: 600;
             font-size: 0.9rem;
-            height: 2.8em; 
-            overflow: hidden; 
-            display: -webkit-box; 
-            -webkit-line-clamp: 2; 
-            -webkit-box-orient: vertical; 
-            margin-bottom: 8px; 
-            color: var(--text-main); 
+            height: 2.8em;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            margin-bottom: 8px;
+            color: var(--text-main);
             line-height: 1.4;
         }
 
@@ -147,8 +147,8 @@
         .status { text-align: center; margin: 40px; color: var(--text-sub); font-size: 0.95em; }
 
         /* ビューア: リーダーのような没入感のあるライトモード */
-        #viewerOverlay { 
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+        #viewerOverlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: #ffffff; z-index: 1000; overflow-y: auto; color: var(--text-main);
         }
 
@@ -166,7 +166,7 @@
         }
 
         .viewer-content { max-width: 850px; margin: 0 auto; text-align: center; padding: 20px; }
-        
+
         .close-btn { font-size: 28px; cursor: pointer; color: var(--text-sub); line-height: 1; }
         .close-btn:hover { color: var(--text-main); }
 
@@ -183,9 +183,9 @@
         }
         .dl-btn-top:hover { background: var(--accent-blue); color: #fff; border-color: var(--accent-blue); }
 
-        .viewer-image-list img { 
-            max-width: 100%; 
-            margin-bottom: 15px; 
+        .viewer-image-list img {
+            max-width: 100%;
+            margin-bottom: 15px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             border: 1px solid var(--border);
         }
@@ -199,7 +199,7 @@
     <div class="brand-header">
         <h1></h1>
     </div>
-    
+
     <div class="search-box">
         <input type="text" id="searchInput" placeholder="タイトル、キーワードで検索" value="にゃ">
         <button onclick="search()">検索</button>
@@ -217,6 +217,7 @@
             <span class="close-btn" onclick="closeViewer()">✕</span>
         </div>
     </div>
+
     <div class="viewer-content">
         <div id="viewerStatus" class="status"></div>
         <div id="viewerImageList" class="viewer-image-list"></div>
@@ -226,29 +227,41 @@
 <script>
     const MY_API_SEARCH = '/api/search';
     const MY_API_DETAILS = '/api/proxy-details';
+
     let currentImages = [];
 
     // 検索機能
     async function search() {
+
         const query = document.getElementById('searchInput').value;
+
         const grid = document.getElementById('resultGrid');
+
         const status = document.getElementById('status');
 
         if (!query) return;
 
         grid.innerHTML = '';
+
         status.innerText = 'カタログを読み込み中...';
 
         try {
+
             const response = await fetch(`${MY_API_SEARCH}?q=${encodeURIComponent(query)}`);
+
             const data = await response.json();
 
             status.innerText = '';
 
             if (data.result && data.result.length > 0) {
+
                 data.result.forEach(item => {
+
                     const card = document.createElement('div');
+
                     card.className = 'card';
+
+                    // Base64文字列をそのままimg.srcへ
                     card.innerHTML = `
                         <img src="${item.image}" alt="${item.title}" loading="lazy">
                         <div class="card-info">
@@ -256,81 +269,123 @@
                             <div class="card-id">ID: ${item.id}</div>
                         </div>
                     `;
+
                     card.onclick = () => openViewer(item.id, item.rule);
+
                     grid.appendChild(card);
                 });
+
             } else {
+
                 status.innerText = '該当する作品が見つかりませんでした。';
             }
+
         } catch (error) {
+
             console.error(error);
+
             status.innerText = '通信エラーが発生しました。';
         }
     }
 
     // ビューア機能
     async function openViewer(id, rule) {
+
         const overlay = document.getElementById('viewerOverlay');
+
         const viewerTitle = document.getElementById('viewerTitle');
+
         const viewerStatus = document.getElementById('viewerStatus');
+
         const viewerImageList = document.getElementById('viewerImageList');
 
         overlay.style.display = 'block';
+
         document.body.style.overflow = 'hidden';
+
         viewerImageList.innerHTML = '';
+
         viewerTitle.innerText = '読み込み中...';
+
         viewerStatus.innerText = "コンテンツを最適化しています...";
+
         currentImages = [];
 
         const targetUrl = `https://momon-ga.com/fanzine/${id}`;
+
         const finalUrl = `${MY_API_DETAILS}?url=${encodeURIComponent(targetUrl)}`;
 
         try {
+
             const response = await fetch(finalUrl);
+
             const data = await response.json();
 
             viewerTitle.innerText = data.title;
-            
-            // サーバー側ですでにBase64化されているため、フロントエンドでの再fetchループは不要
+
             if (data.images && data.images.length > 0) {
+
                 currentImages = data.images;
-                data.images.forEach(base64Data => {
+
+                data.images.forEach(base64String => {
+
                     const newImg = document.createElement('img');
-                    newImg.src = base64Data;
+
+                    // Base64文字列をそのまま代入
+                    newImg.src = base64String;
+
                     viewerImageList.appendChild(newImg);
                 });
+
                 viewerStatus.innerText = `${data.images.length} ページを表示中`;
+
             } else {
+
                 viewerStatus.innerText = "画像データが見つかりませんでした。";
             }
 
         } catch (error) {
+
             console.error(error);
+
             viewerStatus.innerText = "データの取得に失敗しました。";
         }
     }
 
     // ダウンロード機能
     function downloadAll() {
+
         if (currentImages.length === 0) return;
-        
+
         if (confirm(`${currentImages.length}枚の画像を一括でダウンロード（新しいタブで開く）しますか？`)) {
-            currentImages.forEach((url, index) => {
+
+            currentImages.forEach((base64String, index) => {
+
                 setTimeout(() => {
+
                     const link = document.createElement('a');
-                    link.href = url;
+
+                    link.href = base64String;
+
                     link.download = `file-${index + 1}.jpg`;
+
                     link.target = '_blank';
+
                     document.body.appendChild(link);
+
                     link.click();
+
                     document.body.removeChild(link);
+
                 }, index * 200);
             });
         }
     }
 
     function closeViewer() {
+
         document.getElementById('viewerOverlay').style.display = 'none';
+
         document.body.style.overflow = 'auto';
     }
 
