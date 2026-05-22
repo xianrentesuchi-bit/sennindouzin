@@ -100,7 +100,8 @@ app.get('/api/proxy-details', async (req, res) => {
 
         const imgUrls = [];
 
-        const galleryRegex = /src="([^"]*galleries[^"]*)"/g;
+        // 書籍詳細ページのメイン画像やギャラリー（サンプルの複数画像）を漏れなくキャプチャする正規表現
+        const galleryRegex = /<img[^>]+src="([^"]*(?:galleries|fanzine|magazine|wp-content\/uploads)[^"]*)"/g;
 
         let match;
 
@@ -125,10 +126,11 @@ app.get('/api/proxy-details', async (req, res) => {
         // null除外
         const filteredImages = imageUrlsBase64.filter(img => img !== null);
 
-        const titleMatch = htmlString.match(/<h1[^>]*>(.*?)<\/h1>/);
+        // クラス名や属性に関わらず、記事タイトル（h1）の中身をより確実に抽出する
+        const titleMatch = htmlString.match(/<h1[^>]*>([\s\S]*?)<\/h1>/);
 
         const title = titleMatch
-            ? titleMatch[1].replace(/<[^>]*>?/gm, '').trim()
+            ? titleMatch[1].replace(/<[^>]*>?/gm, '').replace(/\s+/g, ' ').trim()
             : "No Title";
 
         // Base64文字列配列を返却
